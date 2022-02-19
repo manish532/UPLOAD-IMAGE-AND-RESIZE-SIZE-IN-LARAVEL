@@ -1,0 +1,47 @@
+
+link of tutorial=>
+https://tn710617.github.io/UploadAndResizeImagesWithLaravel/
+*************************************************************
+
+
+  install this package
+**********************************************
+composer require intervention/image
+
+
+Find config/app.php, and add
+**********************************************
+Intervention\Image\ImageServiceProvider::class
+
+**********************************************
+
+Find config/app.php, and add in 'aliases' array
+**************************************************
+'Image' => Intervention\Image\Facades\Image::class
+***************************************************
+
+
+controller code
+***************************************************
+use Intervention\Image\Facades\Image;
+___________________________________________________
+public function resize_image_andstore(Request $request){
+
+
+  // validation form
+            // $request->validate([
+            //     'product_img' => 'mimes:jpeg,jpg,png,gif,svg|required|max:5120',
+
+            // ]);
+
+      $Product = new ProductList;
+            if($request->hasFile('product_img')){
+                $product_img = $request->file('product_img');
+                $filename = time() . '.' . $product_img->getClientOriginalExtension();
+                Image::make($product_img)->resize(197, 137)->save( public_path('/images/product_img' . $filename ) );
+                $Product->product_img = $filename;
+   
+             }
+
+      $res = $Product->save();
+
